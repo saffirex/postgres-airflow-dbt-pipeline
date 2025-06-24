@@ -1,0 +1,29 @@
+# Ignore everything
+*
+
+# Don't ignore the .gitignore file itself
+!.gitignore
+
+# Don't ignore the main directory
+!dbt_postgres_airflow/
+
+# Don't ignore subdirectories
+!dbt_postgres_airflow/airflow/
+!dbt_postgres_airflow/airflow/dags/
+!dbt_postgres_airflow/dbt/
+!dbt_postgres_airflow/dbt/dbt_project/
+!dbt_postgres_airflow/dbt/dbt_project/models/
+!dbt_postgres_airflow/dbt/first_dbt/
+!dbt_postgres_airflow/dbt/first_dbt/scripts/
+!dbt_postgres_airflow/postgres/
+
+# Now unignore the specific files and contents
+!dbt_postgres_airflow/airflow/dags/**
+!dbt_postgres_airflow/dbt/dbt_project/dbt_project.yml
+!dbt_postgres_airflow/dbt/dbt_project/models/**
+!dbt_postgres_airflow/dbt/first_dbt/scripts/**
+!dbt_postgres_airflow/dbt/profiles.yml
+!dbt_postgres_airflow/postgres/airflow_init.sql
+!dbt_postgres_airflow/postgres/docker-compose.yaml
+
+**/__pycache__

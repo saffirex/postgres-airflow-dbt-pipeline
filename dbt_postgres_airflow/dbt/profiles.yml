@@ -1,0 +1,12 @@
+dbt_project:
+  outputs:
+    dev:
+      dbname: test_db
+      host: postgres
+      pass: safal
+      port: 5432
+      schema: dev
+      threads: 4
+      type: postgres
+      user: safal
+  target: dev

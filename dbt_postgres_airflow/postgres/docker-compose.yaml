@@ -1,0 +1,57 @@
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:latest
+    ports:
+      - 5000:5432
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: safal
+      POSTGRES_PASSWORD: safal
+    volumes:
+      - ./volumes/postgres/:/var/lib/postgresql/data
+      - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/postgres/airflow_init.sql:/docker-entrypoint-initdb.d/airflow_init.sql
+    networks:
+      - my-network
+  
+  airflow:
+    container_name: airflow_container
+    image: apache/airflow:3.0.0
+    ports:
+      - 8000:8080
+    command: >
+     bash -c "airflow db migrate && airflow standalone"
+    environment:
+      # tala ko @postgres is the service name mentioned above
+      # the format below (db+driver)..is used by SQLAlchemy, a popular Python ORM and database toolkit. Airflow just happens to use SQLAlchemy under the hood to handle its database connections (for metadata, task status, logs, etc.).
+      AIRFLOW__DATABASE_SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow_db
+    volumes:
+      - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/airflow/dags/:/opt/airflow/dags/
+      - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/dbt/first_dbt/scripts:/opt/airflow/scripts
+      
+    #run this service after postgres starts
+    depends_on:
+      - postgres
+    networks:
+     - my-network
+  
+  dbt:
+    container_name: dbt_container
+    image: ghcr.io/dbt-labs/dbt-postgres:1.9.latest
+    volumes:
+      - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/dbt/dbt_project:/usr/app
+      - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/dbt:/root/.dbt
+    working_dir: /usr/app
+    environment:
+      DBT_PROFILES_DIRECTORY: "/root/.dbt"
+    depends_on: 
+      - postgres
+    networks:
+      - my-network
+    command: run
+
+
+
+networks:
+  my-network:
+    driver: bridge
