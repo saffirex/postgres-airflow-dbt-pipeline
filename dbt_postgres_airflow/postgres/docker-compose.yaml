@@ -13,12 +13,12 @@ services:
       - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/postgres/airflow_init.sql:/docker-entrypoint-initdb.d/airflow_init.sql
     networks:
       - my-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U safal -d test_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 99
-      start_period: 60s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U safal -d test_db"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 99
+    #   start_period: 60s
   
   airflow:
     container_name: airflow_container
@@ -30,15 +30,18 @@ services:
     environment:
       # tala ko @postgres is the service name mentioned above
       # the format below (db+driver)..is used by SQLAlchemy, a popular Python ORM and database toolkit. Airflow just happens to use SQLAlchemy under the hood to handle its database connections (for metadata, task status, logs, etc.).
-      AIRFLOW__DATABASE_SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow_db
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow_db
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow_db
+      AIRFLOW__DATABASE__LOAD_DEFAULT_CONNECTIONS: 'false'
     volumes:
       - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/airflow/dags/:/opt/airflow/dags/
       - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/dbt/first_dbt/scripts:/opt/airflow/scripts
-      
+      - /var/run/docker.sock:/var/run/docker.sock
     #run this service after postgres starts
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+      # postgres:
+      #   condition: service_healthy
     networks:
      - my-network
   
@@ -52,8 +55,9 @@ services:
     environment:
       DBT_PROFILES_DIRECTORY: "/root/.dbt"
     depends_on: 
-      postgres:
-        condition: service_healthy
+      - postgres
+      # postgres:
+      #   condition: service_healthy
     networks:
       - my-network
     command: run

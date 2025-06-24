@@ -52,7 +52,7 @@ def create_table(conn):
         cursor = conn.cursor()
         cursor.execute("""
                        CREATE SCHEMA if NOT EXISTS dev;
-                       CREATE TABLE IF NOT EXISTS dev.bronze_weatherstack_raw (
+                       CREATE TABLE IF NOT EXISTS dev.bronze_weatherstack_raw(
                            
                            id SERIAL PRIMARY KEY,
                            city TEXT,

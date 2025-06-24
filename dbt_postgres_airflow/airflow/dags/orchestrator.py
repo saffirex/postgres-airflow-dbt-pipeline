@@ -21,9 +21,6 @@ dag = DAG(
     schedule = timedelta(minutes=5)
 )
 
-def random_fxn():
-    print("this is coming from random_fxn")
-    
 with dag:
     task1 = PythonOperator(
         task_id = "ingest-data-task",

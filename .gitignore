@@ -13,6 +13,7 @@
 !dbt_postgres_airflow/dbt/
 !dbt_postgres_airflow/dbt/dbt_project/
 !dbt_postgres_airflow/dbt/dbt_project/models/
+!dbt_postgres_airflow/dbt/dbt_project/models/mart/
 !dbt_postgres_airflow/dbt/first_dbt/
 !dbt_postgres_airflow/dbt/first_dbt/scripts/
 !dbt_postgres_airflow/postgres/
@@ -21,6 +22,7 @@
 !dbt_postgres_airflow/airflow/dags/**
 !dbt_postgres_airflow/dbt/dbt_project/dbt_project.yml
 !dbt_postgres_airflow/dbt/dbt_project/models/**
+
 !dbt_postgres_airflow/dbt/first_dbt/scripts/**
 !dbt_postgres_airflow/dbt/profiles.yml
 !dbt_postgres_airflow/postgres/airflow_init.sql
