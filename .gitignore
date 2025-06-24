@@ -28,5 +28,9 @@
 !dbt_postgres_airflow/postgres/airflow_init.sql
 !dbt_postgres_airflow/postgres/docker-compose.yaml
 !readme.md
+
+!images/
+!images/**
+
 !requirements.txt
 **/__pycache__
