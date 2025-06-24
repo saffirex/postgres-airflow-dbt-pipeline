@@ -13,6 +13,12 @@ services:
       - /home/saffire/dlytica/internship/l-dbt/dbt_postgres_airflow/postgres/airflow_init.sql:/docker-entrypoint-initdb.d/airflow_init.sql
     networks:
       - my-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U safal -d test_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 99
+      start_period: 60s
   
   airflow:
     container_name: airflow_container
@@ -31,7 +37,8 @@ services:
       
     #run this service after postgres starts
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
      - my-network
   
@@ -45,7 +52,8 @@ services:
     environment:
       DBT_PROFILES_DIRECTORY: "/root/.dbt"
     depends_on: 
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - my-network
     command: run
